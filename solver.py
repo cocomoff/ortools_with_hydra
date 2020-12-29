@@ -89,12 +89,14 @@ def print_solution(data, manager, routing, assignment):
     """Prints assignment on console."""
     # Display dropped nodes.
     dropped_nodes = 'Dropped nodes:'
+    dropped_node_set = set({})
     for node in range(routing.Size()):
         if routing.IsStart(node) or routing.IsEnd(node):
             continue
         if assignment.Value(routing.NextVar(node)) == node:
             dropped_nodes += ' {}'.format(manager.IndexToNode(node))
-    print(dropped_nodes)
+            dropped_node_set.add(manager.IndexToNode(node))
+    # print(dropped_nodes)
     # Display routes
     total_distance = 0
     total_load = 0
@@ -115,11 +117,12 @@ def print_solution(data, manager, routing, assignment):
                                                  route_load)
         plan_output += 'Distance of the route: {}m\n'.format(route_distance)
         plan_output += 'Load of the route: {}\n'.format(route_load)
-        print(plan_output)
+        # print(plan_output)
         total_distance += route_distance
         total_load += route_load
-    print('Total Distance of all routes: {}m'.format(total_distance))
-    print('Total Load of all routes: {}'.format(total_load))
+    # print('Total Distance of all routes: {}m'.format(total_distance))
+    # print('Total Load of all routes: {}'.format(total_load))
+    return dropped_node_set, total_distance, total_load
 
 
 def main(penalty=1000, num_vehicle=4):
@@ -177,6 +180,8 @@ def main(penalty=1000, num_vehicle=4):
     # Solve the problem.
     assignment = routing.SolveWithParameters(search_parameters)
 
-    # Print solution on console.
+    # return result
     if assignment:
-        print_solution(data, manager, routing, assignment)
+        return print_solution(data, manager, routing, assignment)
+    else:
+        return None
