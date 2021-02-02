@@ -1,3 +1,2 @@
-solver:
-  penalty: 1000
-  num_vehicle: 4
+defaults:
+  - solver: savings

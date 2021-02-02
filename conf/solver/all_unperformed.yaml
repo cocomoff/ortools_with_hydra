@@ -1,0 +1,6 @@
+# @package _group_
+
+num_vehicle: 4
+penalty: 1000
+first_solution_strategy:
+  num_fss: 6
