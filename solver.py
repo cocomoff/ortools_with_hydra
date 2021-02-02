@@ -125,7 +125,7 @@ def print_solution(data, manager, routing, assignment):
     return dropped_node_set, total_distance, total_load
 
 
-def main(penalty=1000, num_vehicle=4):
+def main(penalty=1000, num_vehicle=4, num_fss=None):
     """Solve the CVRP problem."""
     # Instantiate the data problem.
     data = create_data_model(num_vehicle=num_vehicle)
@@ -171,8 +171,14 @@ def main(penalty=1000, num_vehicle=4):
 
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
-    search_parameters.first_solution_strategy = (
-        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+    if num_fss is None:
+        strategy = routing_enums_pb2.FirstSolutionStrategy.AUTOMATIC
+    else:
+        if num_fss == 3:
+            strategy = routing_enums_pb2.FirstSolutionStrategy.SAVINGS
+        elif num_fss == 6:
+            strategy = routing_enums_pb2.FirstSolutionStrategy.ALL_UNPERFORMED
+    search_parameters.first_solution_strategy = (strategy)
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
     search_parameters.time_limit.FromSeconds(1)
